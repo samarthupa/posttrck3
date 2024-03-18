@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 def search_keywords(keywords, domain):
     chrome_options = Options()
     chrome_options.add_argument("--headless")  # Run Chrome in headless mode (without opening browser window)
-    driver = webdriver.Chrome(executable_path='https://github.com/your_username/your_repository/raw/main/chromedriver', options=chrome_options)
+    driver = webdriver.Chrome(executable_path='https://github.com/samarthupa/posttrck3/raw/main/chromedriver', options=chrome_options)
     
     results = []
     for keyword in keywords:
