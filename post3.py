@@ -5,6 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager, ChromeType
 from bs4 import BeautifulSoup
+import requests
 
 def search_keywords(keywords, domain):
     options = Options()
@@ -22,11 +23,16 @@ def search_keywords(keywords, domain):
         driver.get(url)
         time.sleep(2)  # Allowing time for the page to load
         html_content = driver.page_source
-        position, urls = find_domain_ranking(html_content, domain)
+        initial_html = get_initial_html(url)
+        position, urls = find_domain_ranking(initial_html, domain)
         results.append({'Keyword': keyword, 'Position': position, 'URLs': '\n'.join(urls)})
 
     driver.quit()
     return results
+
+def get_initial_html(url):
+    response = requests.get(url)
+    return response.text
 
 def find_domain_ranking(html_content, domain):
     soup = BeautifulSoup(html_content, 'html.parser')
@@ -34,9 +40,6 @@ def find_domain_ranking(html_content, domain):
     urls = []
 
     for i, result in enumerate(results, 1):
-        # Check if the div is under a div with class "MjjYud"
-        if result.find_parent(class_='MjjYud'):
-            continue
         link = result.find('a')['href']
         urls.append(link)
         if domain in link:
