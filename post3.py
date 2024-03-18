@@ -68,7 +68,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-but this one not providing accurate serp result for india region. how it is different from above code?
