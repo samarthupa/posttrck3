@@ -35,9 +35,10 @@ def find_domain_ranking(html_content, domain):
 
     for i, result in enumerate(results, 1):
         link = result.find('a')['href']
-        urls.append(link)
         if domain in link:
+            urls.append(link)
             return i, urls
+        urls.append(link)
     return None, urls
 
 def main():
