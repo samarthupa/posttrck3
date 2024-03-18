@@ -12,7 +12,7 @@ def search_keywords(keywords, domain):
     # Manually specify Chrome and ChromeDriver versions
     chrome_version = "120.0.6099.199"
     chromedriver_version = "120.0.6099.109"
-    driver_path = ChromeDriverManager(version=chromedriver_version, chrome_version=chrome_version).install()
+    driver_path = ChromeDriverManager().install()
 
     driver = webdriver.Chrome(options=options, executable_path=driver_path)
     
