@@ -3,14 +3,18 @@ import time
 import streamlit as st
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.chrome import ChromeDriverManager, ChromeType
 from bs4 import BeautifulSoup
 
 def search_keywords(keywords, domain):
     options = Options()
     options.add_argument("--headless")  # Run Chrome in headless mode (without opening browser window)
     
-    driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+    # Install and configure Chromium driver
+    driver_path = ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()
+    service = webdriver.chrome.service.Service(driver_path)
+
+    driver = webdriver.Chrome(service=service, options=options)
     
     results = []
     for keyword in keywords:
@@ -64,3 +68,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+but this one not providing accurate serp result for india region. how it is different from above code?
