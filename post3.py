@@ -22,8 +22,8 @@ def search_keywords(keywords, domain):
         driver.get(url)
         time.sleep(2)  # Allowing time for the page to load
         html_content = driver.page_source
-        position = find_domain_ranking(html_content, domain)
-        results.append({'Keyword': keyword, 'Position': position})
+        position, urls = find_domain_ranking(html_content, domain)
+        results.append({'Keyword': keyword, 'Position': position, 'URLs': '\n'.join(urls)})
 
     driver.quit()
     return results
@@ -31,12 +31,14 @@ def search_keywords(keywords, domain):
 def find_domain_ranking(html_content, domain):
     soup = BeautifulSoup(html_content, 'html.parser')
     results = soup.find_all('div', class_='yuRUbf')
+    urls = []
 
     for i, result in enumerate(results, 1):
         link = result.find('a')['href']
+        urls.append(link)
         if domain in link:
-            return i
-    return None
+            return i, urls
+    return None, urls
 
 def main():
     st.title("Google SERP Position Finder")
@@ -60,7 +62,7 @@ def main():
             # Save results to CSV file
             output_file = 'SERP_Positions.csv'
             with open(output_file, 'w', newline='') as file:
-                writer = csv.DictWriter(file, fieldnames=['Keyword', 'Position'])
+                writer = csv.DictWriter(file, fieldnames=['Keyword', 'Position', 'URLs'])
                 writer.writeheader()
                 writer.writerows(results)
 
