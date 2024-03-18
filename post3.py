@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 
 def search_keywords(keywords, domain):
   options = Options()
-  options.add_argument("--headless") # Run Chrome in headless mode (without opening browser window)
+  options.add_argument("--headless")  # Run Chrome in headless mode (without opening browser window)
 
   driver_manager = ChromeDriverManager(version="latest")  # Updated line
   driver_path = driver_manager.install()
