@@ -10,8 +10,8 @@ def search_keywords(keywords, domain):
     options = Options()
     options.add_argument("--headless")  # Run Chrome in headless mode (without opening browser window)
 
-    driver_manager = ChromeDriverManager()  # Updated line (auto-defines the version)
-    driver_path = driver_manager.install()
+    # Get the Chrome driver path
+    driver_path = ChromeDriverManager().install()
 
     driver = webdriver.Chrome(options=options, executable_path=driver_path)
     
@@ -19,7 +19,7 @@ def search_keywords(keywords, domain):
     for keyword in keywords:
         url = f"https://www.google.co.in/search?q={'+'.join(keyword.split())}&num=60&gl=in&hl=en"
         driver.get(url)
-        time.sleep(2) # Allowing time for the page to load
+        time.sleep(2)  # Allowing time for the page to load
         html_content = driver.page_source
         position = find_domain_ranking(html_content, domain)
         results.append({'Keyword': keyword, 'Position': position})
