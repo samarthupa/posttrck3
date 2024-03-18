@@ -6,7 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager, ChromeType
 from bs4 import BeautifulSoup
 
-def search_keywords(keywords, domain):
+def search_keywords(keywords, domain, country_code):
     options = Options()
     options.add_argument("--headless")  # Run Chrome in headless mode (without opening browser window)
     
@@ -18,7 +18,7 @@ def search_keywords(keywords, domain):
     
     results = []
     for keyword in keywords:
-        url = f"https://www.google.co.in/search?q={'+'.join(keyword.split())}&num=60&gl=in&hl=en"
+        url = f"https://www.google.{country_code}/search?q={'+'.join(keyword.split())}&num=60&gl={country_code}&hl=en"
         driver.get(url)
         time.sleep(2)  # Allowing time for the page to load
         html_content = driver.page_source
@@ -50,12 +50,14 @@ def main():
 
     domain = st.text_input("Enter domain to search for:", "mygreatlearning.com")
 
+    country_code = st.selectbox("Select Country Code:", ["com", "co.uk", "co.in"])
+
     if st.button("Search"):
         if not keywords:
             st.warning("Please enter at least one keyword.")
         else:
             st.info("Searching Google for each keyword...")
-            results = search_keywords(keywords, domain)
+            results = search_keywords(keywords, domain, country_code)
 
             # Display results in a table
             st.table(results)
