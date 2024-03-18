@@ -8,8 +8,8 @@ import datetime
 
 # Define keywords
 KEYWORDS = [
-    "keyword1",
-    "keyword2",
+    "free digital marketing course",
+    "free seo course",
     # Add more keywords as needed
 ]
 
@@ -44,7 +44,7 @@ def clean_domain(domain):
         domain = domain.split("www.")[-1]
     return domain
 
-def process_keywords(domain):  # Pass the domain as an argument
+def process_keywords(domain):
     data = []
     for keyword in KEYWORDS:
         st.info(f"Processing keyword: {keyword}")
@@ -63,20 +63,25 @@ def process_keywords(domain):  # Pass the domain as an argument
         # Wait for one minute before processing the next keyword
         time.sleep(60)
 
-    # Store the processed data (e.g., in a file or database)
-    df = pd.DataFrame(data, columns=["Keyword", "Ranking", "URLs Ranking"])
-    filename = f"data_{datetime.date.today()}.csv"
-    df.to_csv(filename, index=False)
-
-    return df
+    return data
 
 def main():
     st.title("Google Domain Ranking Checker")
 
-    # Process keywords and display results
-    domain = "mygreatlearning.com"  # Define your domain here
-    processed_data = process_keywords(domain)  # Pass the domain to process_keywords
-    st.table(processed_data)
+    # Check if keywords have been processed
+    if 'processed_flag' not in st.session_state:
+        # Process keywords and display results
+        domain = "mygreatlearning.com"  # Define your domain here
+        processed_data = process_keywords(domain)
+        st.session_state.processed_flag = True
+    else:
+        st.info("Keywords have already been processed. Showing cached results.")
+        # Load cached results
+        processed_data = st.session_state.processed_data
+
+    # Display results
+    df = pd.DataFrame(processed_data, columns=["Keyword", "Ranking", "URLs Ranking"])
+    st.table(df)
 
     # Download button
     if st.button("Download Position Data"):
