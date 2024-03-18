@@ -50,7 +50,7 @@ def main():
 
     domain = st.text_input("Enter domain to search for:", "mygreatlearning.com")
 
-    country_code = st.selectbox("Select Country Code:", ["com", "co.uk", "co.in"])
+    country_code = st.selectbox("Select Country Code:", ["co.in", "com", "co.uk"])
 
     if st.button("Search"):
         if not keywords:
