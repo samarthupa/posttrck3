@@ -7,29 +7,17 @@ from webdriver_manager.chrome import ChromeDriverManager, ChromeType
 from bs4 import BeautifulSoup
 from selenium.common.exceptions import WebDriverException
 
-def search_keywords(keywords, domain, country_code):
-    options = Options()
-    options.add_argument("--headless")  # Run Chrome in headless mode (without opening browser window)
-    
-    # Install and configure Chromium driver
-    driver_path = ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()
-    service = webdriver.chrome.service.Service(driver_path)
-
-    driver = webdriver.Chrome(service=service, options=options)
-    
+def search_keyword(keyword, domain, country_code, driver):
     results = []
     try:
-        for keyword in keywords:
-            url = f"https://www.google.com/search?q={'+'.join(keyword.split())}&num=60&gl={country_code}&hl=en"
-            driver.get(url)
-            time.sleep(2)  # Allowing time for the page to load
-            html_content = driver.page_source
-            position, urls = find_domain_ranking(html_content, domain)
-            results.append({'Keyword': keyword, 'Position': position, 'URLs': '\n'.join(urls)})
+        url = f"https://www.google.com/search?q={'+'.join(keyword.split())}&num=60&gl={country_code}&hl=en"
+        driver.get(url)
+        time.sleep(2)  # Allowing time for the page to load
+        html_content = driver.page_source
+        position, urls = find_domain_ranking(html_content, domain)
+        results.append({'Keyword': keyword, 'Position': position, 'URLs': '\n'.join(urls)})
     except WebDriverException as e:
-        st.error(f"An error occurred: {e}")
-    finally:
-        driver.quit()
+        st.error(f"An error occurred for keyword '{keyword}': {e}")
     
     return results
 
@@ -64,18 +52,29 @@ def main():
             st.warning("Please enter at least one keyword.")
         else:
             st.info("Searching Google for each keyword...")
-            results = search_keywords(keywords, domain, country_code_map[country_code])
+            options = Options()
+            options.add_argument("--headless")  # Run Chrome in headless mode (without opening browser window)
+            driver_path = ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()
+            service = webdriver.chrome.service.Service(driver_path)
+            driver = webdriver.Chrome(service=service, options=options)
+            all_results = []
+            try:
+                for keyword in keywords:
+                    results = search_keyword(keyword, domain, country_code_map[country_code], driver)
+                    all_results.extend(results)
+            finally:
+                driver.quit()
 
-            if results:
+            if all_results:
                 # Display results in a table
-                st.table(results)
+                st.table(all_results)
 
                 # Save results to CSV file
                 output_file = 'SERP_Positions.csv'
                 with open(output_file, 'w', newline='') as file:
                     writer = csv.DictWriter(file, fieldnames=['Keyword', 'Position', 'URLs'])
                     writer.writeheader()
-                    writer.writerows(results)
+                    writer.writerows(all_results)
 
                 st.success(f"Data saved to {output_file}")
 
