@@ -2,15 +2,18 @@ import csv
 import time
 import streamlit as st
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 
 def search_keywords(keywords, domain):
-    chrome_version = "96.0.4664.110"  # Specify the Chrome version here
-    driver_manager = ChromeDriverManager(chrome_type="chromium")
-    service = Service(driver_manager.install())
-    driver = webdriver.Chrome(service=service)
+    options = Options()
+    options.add_argument("--headless")  # Run Chrome in headless mode (without opening browser window)
+
+    driver_manager = ChromeDriverManager()
+    driver_path = driver_manager.install()
+
+    driver = webdriver.Chrome(options=options, executable_path=driver_path)
     
     results = []
     for keyword in keywords:
