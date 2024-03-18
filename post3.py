@@ -1,3 +1,4 @@
+import os
 import csv
 import time
 import streamlit as st
@@ -8,7 +9,12 @@ from bs4 import BeautifulSoup
 def search_keywords(keywords, domain):
     chrome_options = Options()
     chrome_options.add_argument("--headless")  # Run Chrome in headless mode (without opening browser window)
-    driver = webdriver.Chrome(executable_path='https://github.com/samarthupa/posttrck3/raw/main/chromedriver', options=chrome_options)
+    
+    # Get the directory path of the current script
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    chromedriver_path = os.path.join(current_dir, "chromedriver")
+    
+    driver = webdriver.Chrome(executable_path=chromedriver_path, options=chrome_options)
     
     results = []
     for keyword in keywords:
