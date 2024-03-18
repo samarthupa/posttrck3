@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import base64
 import time
 import datetime
 
@@ -43,7 +44,7 @@ def clean_domain(domain):
         domain = domain.split("www.")[-1]
     return domain
 
-def process_keywords():
+def process_keywords(domain):  # Pass the domain as an argument
     data = []
     for keyword in KEYWORDS:
         st.info(f"Processing keyword: {keyword}")
@@ -73,7 +74,8 @@ def main():
     st.title("Google Domain Ranking Checker")
 
     # Process keywords and display results
-    processed_data = process_keywords()
+    domain = "mygreatlearning.com"  # Define your domain here
+    processed_data = process_keywords(domain)  # Pass the domain to process_keywords
     st.table(processed_data)
 
     # Download button
