@@ -6,11 +6,12 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 
-# Function to search for keywords and find SERP positions
 def search_keywords(keywords, domain):
-    service = Service(ChromeDriverManager().install())
+    chrome_version = "96.0.4664.110"  # Specify the Chrome version here
+    driver_manager = ChromeDriverManager(chrome_type="chromium", version=chrome_version)
+    service = Service(driver_manager.install())
     driver = webdriver.Chrome(service=service)
-
+    
     results = []
     for keyword in keywords:
         url = f"https://www.google.co.in/search?q={'+'.join(keyword.split())}&num=60&gl=in&hl=en"
@@ -23,7 +24,6 @@ def search_keywords(keywords, domain):
     driver.quit()
     return results
 
-# Function to find the SERP position of the domain in the search results
 def find_domain_ranking(html_content, domain):
     soup = BeautifulSoup(html_content, 'html.parser')
     results = soup.find_all('div', class_='yuRUbf')
@@ -34,7 +34,6 @@ def find_domain_ranking(html_content, domain):
             return i
     return None
 
-# Main Streamlit app code
 def main():
     st.title("Google SERP Position Finder")
 
