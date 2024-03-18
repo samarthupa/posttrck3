@@ -10,7 +10,7 @@ def search_keywords(keywords, domain):
     options = Options()
     options.add_argument("--headless")  # Run Chrome in headless mode (without opening browser window)
 
-    driver_manager = ChromeDriverManager()
+    driver_manager = ChromeDriverManager(version="latest")
     driver_path = driver_manager.install()
 
     driver = webdriver.Chrome(options=options, executable_path=driver_path)
