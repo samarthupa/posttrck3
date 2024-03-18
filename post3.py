@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 
 def search_keywords(keywords, domain):
     chrome_version = "96.0.4664.110"  # Specify the Chrome version here
-    driver_manager = ChromeDriverManager(chrome_type="chromium", version=chrome_version)
+    driver_manager = ChromeDriverManager(chrome_type="chromium")
     service = Service(driver_manager.install())
     driver = webdriver.Chrome(service=service)
     
