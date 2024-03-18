@@ -34,6 +34,9 @@ def find_domain_ranking(html_content, domain):
     urls = []
 
     for i, result in enumerate(results, 1):
+        # Check if the div is under a div with class "MjjYud"
+        if result.find_parent(class_='MjjYud'):
+            continue
         link = result.find('a')['href']
         urls.append(link)
         if domain in link:
