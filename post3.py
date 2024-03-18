@@ -5,6 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager, ChromeType
 from bs4 import BeautifulSoup
+from selenium.common.exceptions import WebDriverException
 
 def search_keywords(keywords, domain, country_code):
     options = Options()
@@ -17,15 +18,19 @@ def search_keywords(keywords, domain, country_code):
     driver = webdriver.Chrome(service=service, options=options)
     
     results = []
-    for keyword in keywords:
-        url = f"https://www.google.com/search?q={'+'.join(keyword.split())}&num=60&gl={country_code}&hl=en"
-        driver.get(url)
-        time.sleep(2)  # Allowing time for the page to load
-        html_content = driver.page_source
-        position, urls = find_domain_ranking(html_content, domain)
-        results.append({'Keyword': keyword, 'Position': position, 'URLs': '\n'.join(urls)})
-
-    driver.quit()
+    try:
+        for keyword in keywords:
+            url = f"https://www.google.com/search?q={'+'.join(keyword.split())}&num=60&gl={country_code}&hl=en"
+            driver.get(url)
+            time.sleep(2)  # Allowing time for the page to load
+            html_content = driver.page_source
+            position, urls = find_domain_ranking(html_content, domain)
+            results.append({'Keyword': keyword, 'Position': position, 'URLs': '\n'.join(urls)})
+    except WebDriverException as e:
+        st.error(f"An error occurred: {e}")
+    finally:
+        driver.quit()
+    
     return results
 
 def find_domain_ranking(html_content, domain):
@@ -61,17 +66,18 @@ def main():
             st.info("Searching Google for each keyword...")
             results = search_keywords(keywords, domain, country_code_map[country_code])
 
-            # Display results in a table
-            st.table(results)
+            if results:
+                # Display results in a table
+                st.table(results)
 
-            # Save results to CSV file
-            output_file = 'SERP_Positions.csv'
-            with open(output_file, 'w', newline='') as file:
-                writer = csv.DictWriter(file, fieldnames=['Keyword', 'Position', 'URLs'])
-                writer.writeheader()
-                writer.writerows(results)
+                # Save results to CSV file
+                output_file = 'SERP_Positions.csv'
+                with open(output_file, 'w', newline='') as file:
+                    writer = csv.DictWriter(file, fieldnames=['Keyword', 'Position', 'URLs'])
+                    writer.writeheader()
+                    writer.writerows(results)
 
-            st.success(f"Data saved to {output_file}")
+                st.success(f"Data saved to {output_file}")
 
 if __name__ == "__main__":
     main()
