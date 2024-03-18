@@ -3,15 +3,21 @@ import time
 import streamlit as st
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager, ChromeType
+from selenium.webdriver.chrome.service import ChromiumService
+from bs4 import BeautifulSoup
 
 def search_keywords(keywords, domain):
     options = Options()
     options.add_argument("--headless")  # Run Chrome in headless mode (without opening browser window)
-
-    driver_path = ChromeDriverManager().install()
-
-    driver = webdriver.Chrome(options=options, executable_path=driver_path)
+    
+    # Install and configure Chromium driver
+    driver_path = ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()
+    service = ChromiumService(executable_path=driver_path)
+    driver = webdriver.Chrome(service=service, options=options)
     
     results = []
     for keyword in keywords:
