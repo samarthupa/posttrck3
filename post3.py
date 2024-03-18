@@ -18,7 +18,7 @@ def search_keywords(keywords, domain):
     
     results = []
     for keyword in keywords:
-        url = f"https://www.google.co.in/search?q={'+'.join(keyword.split())}&num=60&gl=in&hl=en"
+        url = f"https://www.google.com/search?q={'+'.join(keyword.split())}&num=60&gl=in&hl=en"
         driver.get(url)
         time.sleep(2)  # Allowing time for the page to load
         html_content = driver.page_source
