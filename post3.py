@@ -11,7 +11,7 @@ def search_keywords(keywords, domain):
     options.add_argument("--headless")  # Run Chrome in headless mode (without opening browser window)
     
     # Set up proxy
-    PROXY = "20.219.177.38:3129"  # Replace with your chosen proxy IP and port
+    PROXY = "128.199.27.84:45857"  # Replace with your chosen proxy IP and port
     options.add_argument(f'--proxy-server={PROXY}')
 
     # Install and configure Chromium driver
