@@ -8,9 +8,9 @@ from bs4 import BeautifulSoup
 
 def search_keywords(keywords, domain):
     options = Options()
-    # Disable headless mode
-    # options.add_argument("--headless")  # Run Chrome in headless mode (without opening browser window)
-    
+    options.add_argument("--headless")  # Run Chrome in headless mode (without opening browser window)
+    options.add_argument("--disable-dev-shm-usage")  # Disable shared memory usage to prevent Chrome crashes
+
     # Install and configure Chromium driver
     driver_path = ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()
     service = webdriver.chrome.service.Service(driver_path)
