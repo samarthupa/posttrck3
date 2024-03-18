@@ -2,5 +2,4 @@ streamlit
 seleniumbase
 webdriver-manager
 beautifulsoup4  # for parsing HTML content (likely already installed with selenium)
-csv
 selenium
