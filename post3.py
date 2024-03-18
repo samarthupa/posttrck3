@@ -2,10 +2,8 @@ import streamlit as st
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-import base64
 import time
 import datetime
-import os
 
 # Define keywords
 KEYWORDS = [
@@ -64,18 +62,12 @@ def process_keywords():
         # Wait for one minute before processing the next keyword
         time.sleep(60)
 
-    # Store the processed data in a CSV file
-    filename = f"data_{datetime.date.today()}.csv"
+    # Store the processed data (e.g., in a file or database)
     df = pd.DataFrame(data, columns=["Keyword", "Ranking", "URLs Ranking"])
+    filename = f"data_{datetime.date.today()}.csv"
     df.to_csv(filename, index=False)
 
     return df
-
-def clear_processed_data():
-    # Delete all CSV files in the current directory
-    for file in os.listdir():
-        if file.endswith(".csv") and file.startswith("data_"):
-            os.remove(file)
 
 def main():
     st.title("Google Domain Ranking Checker")
@@ -93,13 +85,4 @@ def main():
             st.markdown(href, unsafe_allow_html=True)
 
 if __name__ == "__main__":
-    # Clear processed data at midnight
-    while True:
-        current_time = datetime.datetime.now().time()
-        if current_time.hour == 0 and current_time.minute == 0:
-            clear_processed_data()
-            break
-
-        time.sleep(60)
-
     main()
