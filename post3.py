@@ -18,7 +18,7 @@ def search_keywords(keywords, domain, country_code):
     
     results = []
     for keyword in keywords:
-        url = f"https://www.google.{country_code}/search?q={'+'.join(keyword.split())}&num=60&gl={country_code}&hl=en"
+        url = f"https://www.google.com/search?q={'+'.join(keyword.split())}&num=60&gl={country_code}&hl=en"
         driver.get(url)
         time.sleep(2)  # Allowing time for the page to load
         html_content = driver.page_source
@@ -50,14 +50,16 @@ def main():
 
     domain = st.text_input("Enter domain to search for:", "mygreatlearning.com")
 
-    country_code = st.selectbox("Select Country Code:", ["co.in", "com", "co.uk"])
+    country_code = st.selectbox("Select Country Code:", ["US", "UK", "India"])
+
+    country_code_map = {"US": "us", "UK": "uk", "India": "in"}
 
     if st.button("Search"):
         if not keywords:
             st.warning("Please enter at least one keyword.")
         else:
             st.info("Searching Google for each keyword...")
-            results = search_keywords(keywords, domain, country_code)
+            results = search_keywords(keywords, domain, country_code_map[country_code])
 
             # Display results in a table
             st.table(results)
